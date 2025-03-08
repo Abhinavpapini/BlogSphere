@@ -2,7 +2,7 @@
 
 import { useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import logo from "../../assets/logo4.avif"
+import logo from "../../assets/logo4.png"
 import { useClerk, useUser } from "@clerk/clerk-react"
 import { userAuthorContextObj } from "../../contexts/UserAuthorContext"
 import { LogOut, User, BookOpen, Settings } from "lucide-react"
