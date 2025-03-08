@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 export const userAuthorContextObj = createContext()
 
 function UserAuthorContext({ children }) {
@@ -12,10 +13,19 @@ function UserAuthorContext({ children }) {
     role: "",
   })
 
+  const navigate = useNavigate()
+
   useEffect(() => {
     const userInStorage = localStorage.getItem("currentuser")
     if (userInStorage) {
-      setCurrentUser(JSON.parse(userInStorage))
+      const user = JSON.parse(userInStorage)
+      if (user.blocked) {
+        alert("Your account is blocked. Please contact admin.")
+        localStorage.clear()
+        navigate("/signin")
+      } else {
+        setCurrentUser(user)
+      }
     }
   }, [])
 

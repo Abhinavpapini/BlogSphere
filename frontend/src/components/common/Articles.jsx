@@ -11,18 +11,19 @@ function Articles() {
   const [articles, setArticles] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("")
   const navigate = useNavigate()
   const { getToken } = useAuth()
   const { currentUser } = useContext(userAuthorContextObj)
 
   // Get all articles
-  async function getArticles() {
+  async function getArticles(category = "") {
     setLoading(true)
     try {
       // Get jwt token
       const token = await getToken()
       // Make authenticated req
-      const res = await axios.get("http://localhost:3000/author-api/articles", {
+      const res = await axios.get(`http://localhost:3000/author-api/articles${category ? `/filter/${category}` : ""}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,8 +49,8 @@ function Articles() {
   }
 
   useEffect(() => {
-    getArticles()
-  }, [])
+    getArticles(selectedCategory)
+  }, [selectedCategory])
 
   if (loading) {
     return (
@@ -64,11 +65,27 @@ function Articles() {
     <div className="container">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="my-4">Articles</h2>
-        {currentUser.role === "author" && (
-          <Link to="../deleted-articles" className="btn btn-outline-secondary">
-            View Deleted Articles
-          </Link>
-        )}
+        <div className="d-flex align-items-center">
+          <select
+            className="form-select me-3"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="">All Categories</option>
+            <option value="programming">Programming</option>
+            <option value="AI&ML">AI & Machine Learning</option>
+            <option value="database">Database</option>
+            <option value="web-development">Web Development</option>
+            <option value="mobile-development">Mobile Development</option>
+            <option value="devops">DevOps</option>
+            <option value="cybersecurity">Cybersecurity</option>
+          </select>
+          {currentUser.role === "author" && (
+            <Link to="../deleted-articles" className="btn btn-outline-secondary">
+              View Deleted Articles
+            </Link>
+          )}
+        </div>
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}

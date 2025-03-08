@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { useAuth } from "@clerk/clerk-react"
+import { useNavigate } from "react-router-dom"
 
 const AdminProfile = () => {
   const [admin, setAdmin] = useState(null)
   const [users, setUsers] = useState([])
   const [error, setError] = useState("")
   const { getToken } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
