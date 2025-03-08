@@ -21,7 +21,7 @@ adminApp.post("/admin", expressAsyncHandler(async (req, res) => {
   }
 }));
 
-// Fetch admin profile
+// Replace this block of code (approximately lines 24-35):
 adminApp.get("/profile", requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
   const admin = await UserAuthor.findOne({ 
     email: req.auth.userId,
@@ -33,6 +33,34 @@ adminApp.get("/profile", requireAuth({ signInUrl: "unauthorized" }), expressAsyn
   } else {
     res.status(404).send({ message: "Admin not found" });
   }
+}));
+
+// With this updated code:
+adminApp.get("/profile", requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
+// If not found, check if userId might contain the email directly
+const adminByEmail = await UserAuthor.findOne({ 
+  email: req.auth.userId,
+  role: "admin"
+});
+
+if (adminByEmail) {
+  return res.status(200).send(adminByEmail);
+}
+
+// If still not found, try to get email from auth object if available
+if (req.auth.email) {
+  const adminByAuthEmail = await UserAuthor.findOne({ 
+    email: req.auth.email,
+    role: "admin"
+  });
+  
+  if (adminByAuthEmail) {
+    return res.status(200).send(adminByAuthEmail);
+  }
+}
+
+// Admin not found with any method
+res.status(404).send({ message: "Admin not found" });
 }));
 
 // Fetch all users
