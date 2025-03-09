@@ -5,7 +5,7 @@ import axios from "axios"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "@clerk/clerk-react"
 import { userAuthorContextObj } from "../../contexts/UserAuthorContext"
-import { BookOpen, Loader2 } from "lucide-react"
+import { BookOpen, Loader2, Trash2 } from "lucide-react"
 
 function Articles() {
   const [articles, setArticles] = useState([])
@@ -81,8 +81,8 @@ function Articles() {
             <option value="cybersecurity">Cybersecurity</option>
           </select>
           {currentUser.role === "author" && (
-            <Link to="../deleted-articles" className="btn btn-outline-secondary">
-              View Deleted Articles
+            <Link to="../deleted-articles" className="deleted-btn">
+              <Trash2 size={16} className="me-2" /> Deleted
             </Link>
           )}
         </div>

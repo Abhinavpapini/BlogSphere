@@ -13,14 +13,18 @@ import Articles from "./components/common/Articles.jsx"
 import ArticleByID from "./components/common/ArticleByID.jsx"
 import PostArticle from "./components/author/PostArticle.jsx"
 import UserAuthorContext from "./contexts/UserAuthorContext.jsx"
-import AdminProfile from "./components/admin/adminProfile.jsx"
+import AdminProfile from "./components/admin/AdminProfile.jsx"
 import DeletedArticles from "./components/author/DeletedArticles.jsx"
 
 const browserRouterObj = createBrowserRouter(
   [
     {
       path: "/",
-      element: <Rootlayout />,
+      element: (
+        <UserAuthorContext>
+          <Rootlayout />
+        </UserAuthorContext>
+      ),
       children: [
         {
           path: "",
@@ -94,14 +98,12 @@ const browserRouterObj = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <UserAuthorContext>
-      <RouterProvider
-        router={browserRouterObj}
-        future={{
-          v7_startTransition: true,
-        }}
-      />
-    </UserAuthorContext>
+    <RouterProvider
+      router={browserRouterObj}
+      future={{
+        v7_startTransition: true,
+      }}
+    />
   </StrictMode>,
 )
 

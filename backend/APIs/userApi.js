@@ -10,14 +10,47 @@ userApp.post("/user", expressAsyncHandler(createUserOrAuthor))
 
 //post comment
 userApp.put("/comment/:articleId", expressAsyncHandler(async (req, res) => {
-  const commentObj = req.body;
+  try {
+    const commentObj = req.body;
+    const articleId = req.params.articleId;
 
-  const articleWithComment = await Article.findOneAndUpdate(
-    { articleId: req.params.articleId },
-    { $push: { comments: commentObj } },
-    { new: true } // Ensures the updated document is returned
-  );
-  res.status(200).send({ message: "Comment added", payload: articleWithComment });
+    // Validate comment object
+    if (!commentObj.comment || !commentObj.nameOfUser) {
+      return res.status(400).send({ 
+        message: "Comment and user name are required",
+        error: "Missing required fields" 
+      });
+    }
+
+    // Create a clean comment object that exactly matches the schema
+    const newComment = {
+      nameOfUser: commentObj.nameOfUser,
+      comment: commentObj.comment
+    };
+    
+    // First find the article to confirm it exists
+    const article = await Article.findOne({ articleId: articleId });
+    if (!article) {
+      return res.status(404).send({ message: "Article not found" });
+    }
+
+    const articleWithComment = await Article.findOneAndUpdate(
+      { articleId: articleId },
+      { $push: { comments: newComment } },
+      { new: true }
+    );
+
+    if (!articleWithComment) {
+      return res.status(500).send({ message: "Failed to update article with comment" });
+    }
+
+    res.status(200).send({ message: "comment added", payload: articleWithComment });
+  } catch (error) {
+    res.status(500).send({ 
+      message: "Failed to add comment", 
+      error: error.message 
+    });
+  }
 }));
 
 //fetch all users

@@ -16,6 +16,7 @@ function ArticleByID() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm()
   const navigate = useNavigate()
   const { getToken } = useAuth()
@@ -66,19 +67,31 @@ function ArticleByID() {
   async function addComment(commentObj) {
     setIsSubmitting(true)
     try {
-      commentObj.nameOfUser = currentUser.firstName
-      const res = await axios.put(`http://localhost:3000/user-api/comment/${currentArticle.articleId}`, commentObj)
+      // Create a properly structured comment object
+      const comment = {
+        nameOfUser: currentUser.firstName,
+        comment: commentObj.comment
+      };
+      
+      const res = await axios.put(
+        `http://localhost:3000/user-api/comment/${currentArticle.articleId}`, 
+        comment
+      );
+      
       if (res.data.message === "comment added") {
         setCommentStatus("Comment added successfully")
-        // Update the current article with the new comment
-        setCurrentArticle({
-          ...currentArticle,
-          comments: [...currentArticle.comments, { ...commentObj, _id: Date.now() }],
-        })
+        // Update the current article with the new comment from the response
+        setCurrentArticle(res.data.payload)
+        // Reset the form
+        reset()
+        // Clear the success message after 3 seconds
+        setTimeout(() => {
+          setCommentStatus("")
+        }, 3000)
       }
     } catch (error) {
       setCommentStatus("Failed to add comment")
-      console.error("Error adding comment:", error)
+      console.error("Error adding comment:", error.response?.data || error.message)
     } finally {
       setIsSubmitting(false)
     }
@@ -179,14 +192,14 @@ function ArticleByID() {
           <div className="comments-section bg-light p-4 rounded-3 mb-4">
             <h3 className="mb-4">Comments</h3>
 
-            {state.comments.length === 0 ? (
+            {currentArticle.comments.length === 0 ? (
               <p className="text-muted">No comments yet. Be the first to comment!</p>
             ) : (
               <div className="comments">
-                {state.comments.map((commentObj, index) => (
-                  <div key={commentObj._id || index} className="comment-item mb-3 pb-3 border-bottom">
-                    <p className="user-name mb-1">{commentObj?.nameOfUser}</p>
-                    <p className="comment mb-0">{commentObj?.comment}</p>
+                {[...currentArticle.comments].reverse().map((commentObj, index) => (
+                  <div key={index} className="comment-item mb-3 pb-3 border-bottom">
+                    <p className="user-name mb-1">{commentObj.nameOfUser}</p>
+                    <p className="comment mb-0">{commentObj.comment}</p>
                   </div>
                 ))}
               </div>

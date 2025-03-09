@@ -11,20 +11,32 @@ authorApp.post("/author", expressAsyncHandler(createUserOrAuthor))
 
 //create new article
 authorApp.post("/article", expressAsyncHandler(async (req, res) => {
-
   //get new article obj from req
   const newArticleObj = req.body;
   const newArticle = new Article(newArticleObj);
   const articleObj = await newArticle.save();
   res.status(201).send({ message: "article published", payload: articleObj });
-
 }))
 
-//read all articles
+//filter by category (more specific route first)
+authorApp.get('/articles/filter/:category', requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
+  //get category from req
+  const category = req.params.category;
+  //read all articles from db
+  const listOfArticles = await Article.find({ category, isArticleActive: true }).sort({ articleId: -1 });
+  res.status(200).send({ message: "articles", payload: listOfArticles })
+}))
+
+//fetch deleted articles
+authorApp.get('/deleted-articles', requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
+  const listOfArticles = await Article.find({ isArticleActive: false }).sort({ articleId: -1 });
+  res.status(200).send({ message: "articles", payload: listOfArticles })
+}))
+
+//read all articles (general route after specific ones)
 authorApp.get('/articles', requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
   //read all articles from db
-
-  const listOfArticles = await Article.find({ isArticleActive: true });
+  const listOfArticles = await Article.find({ isArticleActive: true }).sort({ articleId: -1 });
   res.status(200).send({ message: "articles", payload: listOfArticles })
 }))
 
@@ -34,7 +46,6 @@ authorApp.get('/unauthorized', (req, res) => {
 
 //modify an article by article id
 authorApp.put('/article/:articleId', requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
-
   //get modified article
   const modifiedArticle = req.body;
   //update article by article id
@@ -47,7 +58,6 @@ authorApp.put('/article/:articleId', requireAuth({ signInUrl: "unauthorized" }),
 
 //delete(soft delete) an article by article id
 authorApp.put('/articles/:articleId', expressAsyncHandler(async (req, res) => {
-
   //get modified article
   const modifiedArticle = req.body;
   //update article by article id
@@ -56,23 +66,6 @@ authorApp.put('/articles/:articleId', expressAsyncHandler(async (req, res) => {
     { returnOriginal: false })
   //send res
   res.status(200).send({ message: "article deleted or restored", payload: latestArticle })
-}))
-
-//filter by category
-authorApp.get('/articles/filter/:category', requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
-  //get category from req
-
-  const category = req.params.category;
-
-  //read all articles from db
-  const listOfArticles = await Article.find({ category, isArticleActive: true });
-  res.status(200).send({ message: "articles", payload: listOfArticles })
-}))
-
-//fetch deleted articles
-authorApp.get('/deleted-articles', requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
-  const listOfArticles = await Article.find({ isArticleActive: false });
-  res.status(200).send({ message: "articles", payload: listOfArticles })
 }))
 
 module.exports = authorApp;

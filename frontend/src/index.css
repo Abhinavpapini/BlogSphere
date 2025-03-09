@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&display=swap");
 
@@ -52,7 +56,7 @@ h1 {
 
 button {
   border-radius: var(--border-radius);
-  border: 1px solid transparent;
+  border: 1px solid var(--button-bg);
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -60,11 +64,15 @@ button {
   background-color: var(--button-bg);
   color: var(--button-text-color);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
+
 button:hover {
   background-color: var(--button-hover-bg);
+  border-color: var(--button-hover-bg);
+  transform: translateY(-2px);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -92,6 +100,57 @@ footer {
   transform: translateY(-10px);
 }
 
+/* Custom button styles */
+.custom-btn,
+.add-article-btn,
+.signout-btn {
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
+  border: 1px solid var(--button-bg);
+  border-radius: var(--border-radius);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-btn:hover,
+.add-article-btn:hover,
+.signout-btn:hover {
+  background-color: var(--button-hover-bg);
+  border-color: var(--button-hover-bg);
+  color: var(--button-text-color);
+  transform: translateY(-2px);
+}
+
+/* Deleted articles button style */
+.deleted-btn {
+  background-color: #dc3545;
+  color: var(--button-text-color);
+  border: 1px solid #dc3545;
+  border-radius: var(--border-radius);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.deleted-btn:hover {
+  background-color: #bb2d3b;
+  border-color: #bb2d3b;
+  color: var(--button-text-color);
+  transform: translateY(-2px);
+}
+
+/* Light theme overrides */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -101,7 +160,20 @@ footer {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: var(--button-bg);
+    color: var(--button-text-color);
   }
+}
+
+/* Role badge styles */
+.role {
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 12px;
+  transform: translate(50%, -50%);
+  border: 2px solid white;
+  text-transform: capitalize;
 }
 
