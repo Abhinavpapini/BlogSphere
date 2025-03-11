@@ -25,64 +25,80 @@ const Header = () => {
   }
 
   return (
-    <header>
-      <nav className="header d-flex justify-content-between align-items-center py-3 px-4">
-        <div className="d-flex align-items-center">
-          <Link to="/" className="d-flex align-items-center text-decoration-none">
-            <img src={logo || "/placeholder.svg"} alt="BlogSphere Logo" width="60px" className="me-3" />
-            <h1 className="m-0 header-title">BlogSphere</h1>
+    <header className="bg-dark-surface border-b border-neon-primary/20">
+      <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center space-x-3 group">
+            <img 
+              src={logo || "/placeholder.svg"} 
+              alt="BlogSphere Logo" 
+              className="w-12 h-12 transition-transform duration-300 group-hover:scale-110" 
+            />
+            <h1 className="text-2xl font-display font-bold bg-gradient-to-r from-neon-primary to-neon-secondary bg-clip-text text-transparent">
+              BlogSphere
+            </h1>
           </Link>
         </div>
-        <ul className="d-flex align-items-center list-unstyled m-0">
+        
+        <ul className="flex items-center space-x-4">
           {!isSignedIn ? (
             <>
-              <li className="me-3">
-                <Link to="signin" className="link btn btn-outline-primary">
+              <li>
+                <Link to="signin" className="btn btn-outline">
                   Sign In
                 </Link>
               </li>
               <li>
-                <Link to="signup" className="link btn btn-primary">
+                <Link to="signup" className="btn btn-primary">
                   Sign Up
                 </Link>
               </li>
             </>
           ) : (
-            <div className="d-flex align-items-center">
-              <div className="user-button d-flex align-items-center me-3">
-                <div className="position-relative me-2">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center">
+                <div className="relative mr-3">
                   <img
                     src={user.imageUrl || "/placeholder.svg"}
-                    width="45px"
-                    height="45px"
-                    className="rounded-circle border border-2 border-white"
+                    className="w-10 h-10 rounded-full border-2 border-neon-primary/50"
                     alt={user.firstName}
                   />
-                  <span className="role position-absolute top-0 end-0">{currentUser.role}</span>
+                  <span className="role-badge">
+                    {currentUser.role}
+                  </span>
                 </div>
-                <p className="mb-0 user-name">{user.firstName}</p>
+                <span className="text-gray-100 font-medium">{user.firstName}</span>
               </div>
 
               {currentUser.role === "author" && (
-                <Link to={`/author-profile/${currentUser.email}`} className="btn btn-sm btn-outline-light me-2">
-                  <BookOpen size={16} className="me-1" /> My Articles
+                <Link 
+                  to={`/author-profile/${currentUser.email}`} 
+                  className="btn btn-outline"
+                >
+                  <BookOpen size={16} className="mr-1.5" /> My Articles
                 </Link>
               )}
 
               {currentUser.role === "admin" && (
-                <Link to={`/admin-profile/${currentUser.email}`} className="btn btn-sm btn-outline-light me-2">
-                  <Settings size={16} className="me-1" /> Admin Panel
+                <Link 
+                  to={`/admin-profile/${currentUser.email}`} 
+                  className="btn btn-outline"
+                >
+                  <Settings size={16} className="mr-1.5" /> Admin Panel
                 </Link>
               )}
 
               {currentUser.role === "user" && (
-                <Link to={`/user-profile/${currentUser.email}`} className="btn btn-sm btn-outline-light me-2">
-                  <User size={16} className="me-1" /> My Profile
+                <Link 
+                  to={`/user-profile/${currentUser.email}`} 
+                  className="btn btn-outline"
+                >
+                  <User size={16} className="mr-1.5" /> My Profile
                 </Link>
               )}
 
-              <button onClick={handleSignOut} className="signout-btn d-flex align-items-center">
-                <LogOut size={16} className="me-1" /> Sign Out
+              <button onClick={handleSignOut} className="btn btn-danger">
+                <LogOut size={16} className="mr-1.5" /> Sign Out
               </button>
             </div>
           )}

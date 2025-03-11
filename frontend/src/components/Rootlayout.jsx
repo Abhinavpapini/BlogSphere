@@ -12,11 +12,11 @@ if (!PUBLISHABLE_KEY) {
 function Rootlayout() {
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <div>
+      <div className="min-h-screen bg-dark-bg flex flex-col">
         <Header />
-        <div style={{ minHeight: "90vh" }}>
+        <main className="flex-grow container mx-auto px-4 py-8">
           <Outlet />
-        </div>
+        </main>
         <Footer />
       </div>
     </ClerkProvider>
