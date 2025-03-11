@@ -25,54 +25,54 @@ adminApp.get("/profile", requireAuth({ signInUrl: "unauthorized" }), expressAsyn
   const admin = await UserAuthor.findOne({ 
     email: req.auth.userId,
     role: "admin"
-  })
+  });
   
   if (admin) {
-    res.status(200).send(admin)
+    res.status(200).send(admin);
   } else {
-    res.status(404).send({ message: "Admin not found" })
+    res.status(404).send({ message: "Admin not found" });
   }
-}))
+}));
 
 adminApp.get("/users", requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
   const admin = await UserAuthor.findOne({ 
     email: req.auth.userId,
     role: "admin"
-  })
+  });
 
   if (!admin) {
-    return res.status(403).send({ message: "Unauthorized: Admin access required" })
+    return res.status(403).send({ message: "Unauthorized: Admin access required" });
   }
 
-  const users = await UserAuthor.find({ role: { $ne: "admin" } })
-  res.status(200).send(users)
-}))
+  const users = await UserAuthor.find({ role: { $ne: "admin" } });
+  res.status(200).send(users);
+}));
 
 adminApp.put("/block-unblock/:id", requireAuth({ signInUrl: "unauthorized" }), expressAsyncHandler(async (req, res) => {
   const admin = await UserAuthor.findOne({ 
     email: req.auth.userId,
     role: "admin"
-  })
+  });
 
   if (!admin) {
-    return res.status(403).send({ message: "Unauthorized: Admin access required" })
+    return res.status(403).send({ message: "Unauthorized: Admin access required" });
   }
 
-  const id = req.params.id
-  const { blocked } = req.body
+  const id = req.params.id;
+  const { blocked } = req.body;
   if (blocked === undefined) {
-    return res.status(400).send({ message: "Blocked status is required" })
+    return res.status(400).send({ message: "Blocked status is required" });
   }
   try {
-    const userAuthor = await UserAuthor.findByIdAndUpdate(id, { blocked }, { new: true })
+    const userAuthor = await UserAuthor.findByIdAndUpdate(id, { blocked }, { new: true });
     if (!userAuthor) {
-      return res.status(404).send({ message: "User not found" })
+      return res.status(404).send({ message: "User not found" });
     }
-    res.status(200).send({ message: `User ${blocked ? 'blocked' : 'unblocked'} successfully`, payload: userAuthor })
+    res.status(200).send({ message: `User ${blocked ? 'blocked' : 'unblocked'} successfully`, payload: userAuthor });
   } catch (error) {
-    res.status(500).send({ message: "Internal Server Error" })
+    res.status(500).send({ message: "Internal Server Error" });
   }
-}))
+}));
 
 adminApp.get('/unauthorized', (req, res) => {
   res.send({ message: "Unauthorized request" });

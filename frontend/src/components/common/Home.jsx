@@ -137,6 +137,7 @@ function Home() {
                     height="100px"
                     className="rounded-circle border border-3 border-white shadow-sm me-4"
                     alt={user.firstName}
+                    width="100" height="100"
                   />
                   <div>
                     <h2 className="mb-1">

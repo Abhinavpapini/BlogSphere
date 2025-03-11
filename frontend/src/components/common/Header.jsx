@@ -33,6 +33,7 @@ const Header = () => {
               src={logo || "/placeholder.svg"} 
               alt="BlogSphere Logo" 
               className="w-12 h-12 transition-transform duration-300 group-hover:scale-110" 
+              width="48" height="48"
             />
             <h1 className="text-2xl font-display font-bold bg-gradient-to-r from-neon-primary to-neon-secondary bg-clip-text text-transparent">
               BlogSphere
@@ -62,6 +63,7 @@ const Header = () => {
                     src={user.imageUrl || "/placeholder.svg"}
                     className="w-10 h-10 rounded-full border-2 border-neon-primary/50"
                     alt={user.firstName}
+                    width="40" height="40"
                   />
                   <span className="role-badge">
                     {currentUser.role}
