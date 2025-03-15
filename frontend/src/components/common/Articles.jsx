@@ -111,10 +111,13 @@ function Articles() {
                       src={articleObj.authorData.profileImageUrl || "/placeholder.svg"}
                       width="40px"
                       height="40px"
-                      className="rounded-circle me-2"
+                      className="rounded-circle border border-light me-2"
                       alt={articleObj.authorData.nameOfAuthor}
                     />
-                    <p className="mb-0 text-secondary">{articleObj.authorData.nameOfAuthor}</p>
+                    <div>
+                      <small className="text-muted d-block" style={{ fontSize: '0.75rem' }}>author</small>
+                      <p className="mb-0">{articleObj.authorData.nameOfAuthor}</p>
+                    </div>
                   </div>
 
                   {/* Article title */}

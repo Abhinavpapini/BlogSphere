@@ -80,7 +80,7 @@ function Home() {
       <div className="row">
         <div className="col-lg-8 mx-auto text-center mb-5">
           <h1 className="display-4 mb-3">Welcome to BlogSphere</h1>
-          <p className="lead text-muted">A platform for writers and readers to connect through meaningful content</p>
+          <p className="lead">A platform for writers and readers to connect through meaningful content</p>
         </div>
       </div>
 
@@ -137,7 +137,6 @@ function Home() {
                     height="100px"
                     className="rounded-circle border border-3 border-white shadow-sm me-4"
                     alt={user.firstName}
-                    width="100" height="100"
                   />
                   <div>
                     <h2 className="mb-1">

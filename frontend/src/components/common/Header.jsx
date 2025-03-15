@@ -26,13 +26,13 @@ const Header = () => {
 
   return (
     <header className="bg-dark-surface border-b border-neon-primary/20">
-      <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center">
-          <Link to="/" className="flex items-center space-x-3 group">
+      <nav className="container mx-auto px-4 py-4 d-flex justify-content-between align-items-center">
+        <div className="d-flex align-items-center">
+          <Link to="/" className="d-flex align-items-center">
             <img 
               src={logo || "/placeholder.svg"} 
               alt="BlogSphere Logo" 
-              className="w-12 h-12 transition-transform duration-300 group-hover:scale-110" 
+              className="w-12 h-12 transition-transform duration-300" 
               width="48" height="48"
             />
             <h1 className="text-2xl font-display font-bold bg-gradient-to-r from-neon-primary to-neon-secondary bg-clip-text text-transparent">
@@ -41,43 +41,40 @@ const Header = () => {
           </Link>
         </div>
         
-        <ul className="flex items-center space-x-4">
+        <div className="flex items-center gap-4">
           {!isSignedIn ? (
             <>
-              <li>
-                <Link to="signin" className="btn btn-outline">
-                  Sign In
-                </Link>
-              </li>
-              <li>
-                <Link to="signup" className="btn btn-primary">
-                  Sign Up
-                </Link>
-              </li>
+              <Link to="signin" className="btn btn-outline btn-danger text-gray-300 hover:text-white px-3">
+                Sign In
+              </Link>
+              <Link to="#" className="btn btn-outline text-gray-300 hover:text-white px-3">
+                
+              </Link>
+              <Link to="signup" className="btn btn-primary">
+                Sign Up
+              </Link>
             </>
           ) : (
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center">
-                <div className="relative mr-3">
-                  <img
-                    src={user.imageUrl || "/placeholder.svg"}
-                    className="w-10 h-10 rounded-full border-2 border-neon-primary/50"
-                    alt={user.firstName}
-                    width="40" height="40"
-                  />
-                  <span className="role-badge">
-                    {currentUser.role}
-                  </span>
+            <div className="d-flex align-items-center gap-3">
+              <div className="d-flex align-items-center">
+                <img
+                  src={user.imageUrl || "/placeholder.svg"}
+                  className="rounded-circle border-2 border-light"
+                  alt={user.firstName}
+                  width="40" height="40"
+                />
+                <div className="d-flex flex-column ms-2">
+                  <small className="text-light opacity-75 mb-0" style={{ fontSize: '0.75rem', lineHeight: 1 }}>{currentUser.role}</small>
+                  <span className="text-light">{user.firstName}</span>
                 </div>
-                <span className="text-gray-100 font-medium">{user.firstName}</span>
               </div>
 
               {currentUser.role === "author" && (
                 <Link 
                   to={`/author-profile/${currentUser.email}`} 
-                  className="btn btn-outline"
+                  className="btn btn-outline text-white border"
                 >
-                  <BookOpen size={16} className="mr-1.5" /> My Articles
+                  <BookOpen size={16} className="me-2 text-white" /> My Articles
                 </Link>
               )}
 
@@ -86,7 +83,7 @@ const Header = () => {
                   to={`/admin-profile/${currentUser.email}`} 
                   className="btn btn-outline"
                 >
-                  <Settings size={16} className="mr-1.5" /> Admin Panel
+                  <Settings size={16} className="me-2" /> Admin Panel
                 </Link>
               )}
 
@@ -95,20 +92,19 @@ const Header = () => {
                   to={`/user-profile/${currentUser.email}`} 
                   className="btn btn-outline"
                 >
-                  <User size={16} className="mr-1.5" /> My Profile
+                  <User size={16} className="me-2" /> My Profile
                 </Link>
               )}
 
               <button onClick={handleSignOut} className="btn btn-danger">
-                <LogOut size={16} className="mr-1.5" /> Sign Out
+                <LogOut size={16} className="me-2" /> Sign Out
               </button>
             </div>
           )}
-        </ul>
+        </div>
       </nav>
     </header>
   )
 }
 
 export default Header
-
