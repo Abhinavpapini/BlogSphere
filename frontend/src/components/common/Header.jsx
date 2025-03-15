@@ -81,7 +81,7 @@ const Header = () => {
               {currentUser.role === "admin" && (
                 <Link 
                   to={`/admin-profile/${currentUser.email}`} 
-                  className="btn btn-outline"
+                  className="btn btn-outline text-white border"
                 >
                   <Settings size={16} className="me-2" /> Admin Panel
                 </Link>
@@ -90,7 +90,7 @@ const Header = () => {
               {currentUser.role === "user" && (
                 <Link 
                   to={`/user-profile/${currentUser.email}`} 
-                  className="btn btn-outline"
+                  className="btn btn-outline text-white border"
                 >
                   <User size={16} className="me-2" /> My Profile
                 </Link>
