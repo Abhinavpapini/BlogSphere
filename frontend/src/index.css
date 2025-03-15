@@ -1,4 +1,3 @@
-/* Remove Tailwind CSS directives */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&display=swap");
 
@@ -86,14 +85,13 @@ footer {
   background-color: var(--header-footer-bg);
   color: var(--button-text-color);
   padding: 1em;
-  text-align: left; /* Change from center to left */
+  text-align: left;
 }
 
 .container {
   padding: 2em;
 }
 
-/* Custom button styles */
 .custom-btn,
 .add-article-btn,
 .signout-btn {
@@ -120,7 +118,6 @@ footer {
   transform: translateY(-2px);
 }
 
-/* Deleted articles button style */
 .deleted-btn {
   background-color: #dc3545;
   color: var(--button-text-color);
@@ -143,7 +140,6 @@ footer {
   transform: translateY(-2px);
 }
 
-/* Light theme overrides */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -158,7 +154,6 @@ footer {
   }
 }
 
-/* Role badge styles */
 .role {
   background-color: var(--primary-color);
   color: white;
@@ -171,15 +166,15 @@ footer {
 }
 
 .comment {
-  color: #f4f4f4; /* Light text color for better visibility */
-  background-color: var(--dark-surface); /* Dark background for comments */
+  color: #f4f4f4;
+  background-color: var (--dark-surface);
   padding: 1rem;
   border-radius: var(--border-radius);
   margin-bottom: 1rem;
 }
 
 .comments-section {
-  background-color: var(--dark-bg) !important; /* Override bootstrap bg-light */
+  background-color: var(--dark-bg) !important;
   color: #f4f4f4;
   border: 1px solid var(--dark-surface);
   border-radius: var(--border-radius);
@@ -199,7 +194,6 @@ footer {
   margin-bottom: 0.5rem;
 }
 
-/* Style for the comment form */
 .comments-section textarea.form-control {
   background-color: var(--dark-surface);
   border: 1px solid rgba(255, 255, 255, 0.1);

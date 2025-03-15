@@ -5,51 +5,28 @@ import { useAuth } from "@clerk/clerk-react";
 const UsersnAuthors = () => {
   const [users, setUsers] = useState([]);
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
-  const { getToken, userId } = useAuth();
+  const { getToken } = useAuth();
   const BACKEND_URL = "http://localhost:3000";
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        console.log("Fetching users...");
-        const token = await getToken();
-        console.log("Got token:", token ? "Token exists" : "No token");
-        
-        const response = await axios.get(`${BACKEND_URL}/admin-api/users`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-        });
-        
-        console.log("API Response:", response.data);
-        
-        // If response.data is the array directly
-        if (Array.isArray(response.data)) {
-          console.log("Setting users array:", response.data.length, "users found");
-          setUsers(response.data);
-        } 
-        // If response.data contains the array in a property
-        else if (Array.isArray(response.data.users) || Array.isArray(response.data.payload)) {
-          const usersArray = response.data.users || response.data.payload;
-          console.log("Setting users from payload:", usersArray.length, "users found");
-          setUsers(usersArray);
-        } else {
-          console.error("Unexpected response format:", response.data);
-          showToast("Invalid data format received", "error");
-        }
-      } catch (error) {
-        console.error("Full error object:", error);
-        console.error("Error response:", error.response?.data);
-        console.error("Error status:", error.response?.status);
-        showToast(error.response?.data?.message || "Failed to load users", "error");
-      }
-    };
+    const currentUser = JSON.parse(localStorage.getItem("currentuser"));
+    const userId = currentUser ? currentUser._id : null;
+    console.log(userId);
 
-    if (getToken) {
-      fetchUsers();
-    }
-  }, [getToken]);
+    axios
+      .get(`http://localhost:3000/user-api/users`, {
+        headers: {
+          Authorization: `Bearer ${userId}`,
+        },
+      })
+      .then((response) => {
+        setUsers(response.data.payload);
+      })
+      .catch((error) => {
+        console.error(error);
+        showToast("Failed to load users", "error");
+      });
+  }, []);
 
   // Toast helper function
   const showToast = (message, type = "success") => {
@@ -62,8 +39,9 @@ const UsersnAuthors = () => {
   const toggleBlockStatus = async (id, blocked) => {
     try {
       const token = await getToken();
+
       const response = await axios.put(
-        `${BACKEND_URL}/admin-api/block-unblock/${id}`,
+        `${BACKEND_URL}/admin-api/admin/block-unblock/${id}`,
         { blocked: !blocked },
         {
           headers: {
@@ -72,14 +50,12 @@ const UsersnAuthors = () => {
         }
       );
 
-      if (response.data) {
-        showToast(response.data.message);
-        setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user._id === id ? { ...user, blocked: response.data.payload.blocked } : user
-          )
-        );
-      }
+      showToast(response.data.message);
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === id ? { ...user, blocked: response.data.payload.blocked } : user
+        )
+      );
     } catch (error) {
       console.error("Error blocking/unblocking user:", error);
       showToast("Failed to update user status", "error");
@@ -90,15 +66,11 @@ const UsersnAuthors = () => {
   const Toast = ({ message, type }) => {
     return (
       <div
-        className={`fixed top-4 right-4 px-4 py-2 rounded-md shadow-lg z-50 transition-opacity duration-300 ${
-          toast.show ? "opacity-100" : "opacity-0 pointer-events-none"
-        } ${
-          type === "error"
-            ? "bg-red-700 text-red-100"
-            : "bg-green-700 text-green-100"
+        className={`position-fixed top-0 end-0 m-3 p-3 rounded shadow-lg ${
+          type === "error" ? "bg-danger text-white" : "bg-success text-white"
         }`}
       >
-        <p>{message}</p>
+        <p className="mb-0">{message}</p>
       </div>
     );
   };
@@ -110,47 +82,45 @@ const UsersnAuthors = () => {
         
         <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full table-auto">
-              <thead className="bg-gray-700">
+          <table className="table table-dark table-striped table-hover">
+              <thead className="thead-dark">
                 <tr>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-indigo-300 uppercase tracking-wider">Name</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-indigo-300 uppercase tracking-wider hidden md:table-cell">Email</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-indigo-300 uppercase tracking-wider">Role</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-indigo-300 uppercase tracking-wider">Status</th>
-                  <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-indigo-300 uppercase tracking-wider">Action</th>
+                  <th scope="col">Name</th>
+                  <th scope="col" className="d-none d-md-table-cell">Email</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700">
+              <tbody>
                 {users.map((user) => (
-                  <tr key={user._id} className="hover:bg-gray-700 transition-colors">
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
-                      <div className="font-medium text-gray-100">{user.firstName} {user.lastName}</div>
-                      <div className="text-xs text-gray-400 md:hidden mt-1">{user.email}</div>
+                  <tr key={user._id}>
+                    <td>
+                      <div>{user.firstName} {user.lastName}</div>
+                      <div className="d-md-none text-muted">{user.email}</div>
                     </td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm hidden md:table-cell">{user.email}</td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                        user.role === "admin" ? "bg-purple-900 text-purple-200" : 
-                        user.role === "author" ? "bg-blue-900 text-blue-200" : "bg-gray-600 text-gray-200"
+                    <td className="d-none d-md-table-cell">{user.email}</td>
+                    <td>
+                      <span className={`badge ${
+                        user.role === "admin" ? "bg-primary" : 
+                        user.role === "author" ? "bg-info" : "bg-secondary"
                       }`}>
                         {user.role}
                       </span>
                     </td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                        user.blocked ? "bg-red-900 text-red-200" : "bg-green-900 text-green-200"
+                    <td>
+                      <span className={`badge ${
+                        user.blocked ? "bg-danger" : "bg-success"
                       }`}>
                         {user.blocked ? "Blocked" : "Active"}
                       </span>
                     </td>
-                    <td className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">
+                    <td>
                       <button
                         onClick={() => toggleBlockStatus(user._id, user.blocked)}
-                        className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium ${
-                          user.blocked
-                            ? "bg-green-700 hover:bg-green-600 text-green-100"
-                            : "bg-red-700 hover:bg-red-600 text-red-100"
-                        } transition-colors`}
+                        className={`btn btn-sm ${
+                          user.blocked ? "btn-success" : "btn-danger"
+                        }`}
                       >
                         {user.blocked ? "Unblock" : "Block"}
                       </button>
@@ -169,4 +139,4 @@ const UsersnAuthors = () => {
   );
 };
 
-export default UsersnAuthors; 
+export default UsersnAuthors;

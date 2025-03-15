@@ -6,4 +6,4 @@ export const ENDPOINTS = {
     USERS: `${API_BASE_URL}/admin-api/users`,
     BLOCK_UNBLOCK: (userId) => `${API_BASE_URL}/admin-api/block-unblock/${userId}`,
   }
-}; 
+};

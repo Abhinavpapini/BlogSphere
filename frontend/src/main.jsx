@@ -15,8 +15,7 @@ import PostArticle from "./components/author/PostArticle.jsx"
 import UserAuthorContext from "./contexts/UserAuthorContext.jsx"
 import AdminProfile from "./components/admin/AdminProfile.jsx"
 import DeletedArticles from "./components/author/DeletedArticles.jsx"
-import AdminLayout from "./components/admin/AdminLayout.jsx"
-import AdminDashboard from "./components/admin/AdminDashboard.jsx"
+import UsersnAuthors from "./components/admin/UsersnAuthors.jsx"
 
 const browserRouterObj = createBrowserRouter(
   [
@@ -85,26 +84,16 @@ const browserRouterObj = createBrowserRouter(
           ],
         },
         {
-          path: "admin-profile/:email",
+          path: 'admin-profile/:email',
           element: <AdminProfile />,
           children: [
             {
-              path: "",
-              element: <AdminDashboard />,
+              index: true,
+              element: <UsersnAuthors />,
             },
             {
-              path: "dashboard",
-              element: <AdminDashboard />,
-            },
-          ],
-        },
-        {
-          path: "admin",
-          element: <AdminLayout />,
-          children: [
-            {
-              path: "",
-              element: <AdminDashboard />,
+              path: 'usersnauthors',
+              element: <UsersnAuthors />,
             },
           ],
         },
