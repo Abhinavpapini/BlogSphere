@@ -15,6 +15,7 @@ function Articles() {
   const navigate = useNavigate()
   const { getToken } = useAuth()
   const { currentUser } = useContext(userAuthorContextObj)
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   // Get all articles
   async function getArticles(category = "") {
@@ -23,7 +24,7 @@ function Articles() {
       // Get jwt token
       const token = await getToken()
       // Make authenticated req
-      const res = await axios.get(`http://localhost:3000/author-api/articles${category ? `/filter/${category}` : ""}`, {
+      const res = await axios.get(`${BACKEND_URL}/author-api/articles${category ? `/filter/${category}` : ""}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

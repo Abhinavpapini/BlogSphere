@@ -23,6 +23,7 @@ function ArticleByID() {
   const [currentArticle, setCurrentArticle] = useState(state)
   const [commentStatus, setCommentStatus] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   function enableEdit() {
     setEditArticleStatus(true)
@@ -44,7 +45,7 @@ function ArticleByID() {
         currentDate.toLocaleTimeString("en-US", { hour12: true })
 
       const res = await axios.put(
-        `http://localhost:3000/author-api/article/${articleAfterChanges.articleId}`,
+        `${BACKEND_URL}/author-api/article/${articleAfterChanges.articleId}`,
         articleAfterChanges,
         {
           headers: {
@@ -74,7 +75,7 @@ function ArticleByID() {
       };
       
       const res = await axios.put(
-        `http://localhost:3000/user-api/comment/${currentArticle.articleId}`, 
+        `${BACKEND_URL}/user-api/comment/${currentArticle.articleId}`, 
         comment
       );
       
@@ -102,7 +103,7 @@ function ArticleByID() {
       const token = await getToken()
       const articleToUpdate = { ...state, isArticleActive: false }
       const res = await axios.put(
-        `http://localhost:3000/author-api/articles/${state.articleId}`,
+        `${BACKEND_URL}/author-api/articles/${state.articleId}`,
         articleToUpdate,
         {
           headers: {
@@ -124,7 +125,7 @@ function ArticleByID() {
       const token = await getToken()
       const articleToUpdate = { ...state, isArticleActive: true }
       const res = await axios.put(
-        `http://localhost:3000/author-api/articles/${state.articleId}`,
+        `${BACKEND_URL}/author-api/articles/${state.articleId}`,
         articleToUpdate,
         {
           headers: {

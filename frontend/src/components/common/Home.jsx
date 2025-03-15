@@ -13,6 +13,7 @@ function Home() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   async function onSelectRole(e) {
     setError("")
@@ -27,11 +28,11 @@ function Home() {
       }
 
       if (selectedRole === "author") {
-        res = await axios.post("http://localhost:3000/author-api/author", userData)
+        res = await axios.post(`${BACKEND_URL}/author-api/author`, userData)
       } else if (selectedRole === "user") {
-        res = await axios.post("http://localhost:3000/user-api/user", userData)
+        res = await axios.post(`${BACKEND_URL}/user-api/user`, userData)
       } else if (selectedRole === "admin") {
-        res = await axios.post("http://localhost:3000/admin-api/admin", userData)
+        res = await axios.post(`${BACKEND_URL}/admin-api/admin`, userData)
       }
 
       if (res && res.data) {

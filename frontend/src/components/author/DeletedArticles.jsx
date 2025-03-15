@@ -12,12 +12,13 @@ function DeletedArticles() {
   const [error, setError] = useState("")
   const navigate = useNavigate()
   const { getToken } = useAuth()
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   async function getDeletedArticles() {
     setLoading(true)
     try {
       const token = await getToken()
-      const res = await axios.get("http://localhost:3000/author-api/deleted-articles", {
+      const res = await axios.get(`${BACKEND_URL}/author-api/deleted-articles`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -50,7 +51,7 @@ function DeletedArticles() {
       // Update it with isArticleActive set to true
       const articleToUpdate = { ...articleToRestore, isArticleActive: true }
       const res = await axios.put(
-        `http://localhost:3000/author-api/articles/${articleId}`,
+        `${BACKEND_URL}/author-api/articles/${articleId}`,
         articleToUpdate,
         {
           headers: {

@@ -17,6 +17,7 @@ function PostArticle() {
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   async function postArticle(articleObj) {
     setIsSubmitting(true)
@@ -57,7 +58,7 @@ function PostArticle() {
       articleObj.isArticleActive = true
 
       // Make HTTP POST req to create new article in backend
-      const res = await axios.post("http://localhost:3000/author-api/article", articleObj)
+      const res = await axios.post(`${BACKEND_URL}/author-api/article`, articleObj)
 
       if (res.status === 201) {
         // Navigate to articles component
