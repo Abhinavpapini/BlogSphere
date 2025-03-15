@@ -15,6 +15,8 @@ import PostArticle from "./components/author/PostArticle.jsx"
 import UserAuthorContext from "./contexts/UserAuthorContext.jsx"
 import AdminProfile from "./components/admin/AdminProfile.jsx"
 import DeletedArticles from "./components/author/DeletedArticles.jsx"
+import AdminLayout from "./components/admin/AdminLayout.jsx"
+import AdminDashboard from "./components/admin/AdminDashboard.jsx"
 
 const browserRouterObj = createBrowserRouter(
   [
@@ -85,6 +87,26 @@ const browserRouterObj = createBrowserRouter(
         {
           path: "admin-profile/:email",
           element: <AdminProfile />,
+          children: [
+            {
+              path: "",
+              element: <AdminDashboard />,
+            },
+            {
+              path: "dashboard",
+              element: <AdminDashboard />,
+            },
+          ],
+        },
+        {
+          path: "admin",
+          element: <AdminLayout />,
+          children: [
+            {
+              path: "",
+              element: <AdminDashboard />,
+            },
+          ],
         },
       ],
     },
@@ -106,4 +128,3 @@ createRoot(document.getElementById("root")).render(
     />
   </StrictMode>,
 )
-

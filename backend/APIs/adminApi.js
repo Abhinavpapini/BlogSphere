@@ -72,8 +72,9 @@ adminApp.get("/profile", requireAuth({ signInUrl: "unauthorized" }), expressAsyn
       });
     }
 
+    // Modified query to be case-insensitive
     const admin = await UserAuthor.findOne({ 
-      email: userEmail,
+      email: { $regex: new RegExp('^' + userEmail + '$', 'i') },
       role: "admin"
     });
     
@@ -82,6 +83,20 @@ adminApp.get("/profile", requireAuth({ signInUrl: "unauthorized" }), expressAsyn
     if (admin) {
       res.status(200).send(admin);
     } else {
+      // If not found, try creating an admin if this appears to be a first-time setup
+      const allUsersCount = await UserAuthor.countDocuments();
+      if (allUsersCount === 0) {
+        const newAdmin = new UserAuthor({
+          email: userEmail,
+          firstName: "Admin",
+          lastName: "User",
+          role: "admin",
+          isActive: true
+        });
+        const savedAdmin = await newAdmin.save();
+        return res.status(201).send(savedAdmin);
+      }
+      
       res.status(404).send({ 
         message: "Admin not found", 
         searchedEmail: userEmail,
@@ -116,8 +131,9 @@ adminApp.get("/users", requireAuth({ signInUrl: "unauthorized" }), expressAsyncH
       });
     }
 
+    // Modified query to be case-insensitive
     const admin = await UserAuthor.findOne({ 
-      email: userEmail,
+      email: { $regex: new RegExp('^' + userEmail + '$', 'i') },
       role: "admin"
     });
 
@@ -135,11 +151,9 @@ adminApp.get("/users", requireAuth({ signInUrl: "unauthorized" }), expressAsyncH
       return res.status(403).send({ message: "Unauthorized: Admin access required" });
     }
 
+    // Simplified query - fetching ALL users that aren't this admin
     const users = await UserAuthor.find({ 
-      $and: [
-        { role: { $ne: "admin" } },
-        { email: { $ne: userEmail } }
-      ]
+      _id: { $ne: admin._id }  // Exclude current admin only
     });
     
     console.log("\nFound users:", users.length);
@@ -166,8 +180,9 @@ adminApp.put("/block-unblock/:id", requireAuth({ signInUrl: "unauthorized" }), e
     });
   }
 
+  // Modified query to be case-insensitive
   const admin = await UserAuthor.findOne({ 
-    email: userEmail,
+    email: { $regex: new RegExp('^' + userEmail + '$', 'i') },
     role: "admin"
   });
 
